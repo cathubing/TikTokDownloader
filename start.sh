@@ -72,7 +72,7 @@ config = {
     "timeout": 10,
     "max_retry": 10,
     "max_pages": 0,
-    "run_command": "8",
+    "run_command": "5",
     "ffmpeg": "",
     "douyin_platform": True,
     "tiktok_platform": False
