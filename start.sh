@@ -88,5 +88,6 @@ except Exception as e:
 PYEOF
 
 echo "[start.sh] 启动 DouK-Downloader（Web API 模式，端口 $PORT）..."
-echo "8" | python3 /app/main.py
+printf "8\n1\n" | python3 /app/main.py
+
 
