@@ -87,7 +87,24 @@ except Exception as e:
     sys.exit(1)
 PYEOF
 
+# 初始化数据库，跳过语言选择和免责声明
+echo "[start.sh] 初始化数据库..."
+python3 - <<'PYEOF'
+import asyncio
+import sys
+sys.path.insert(0, '/app')
+from src.manager import Database
+
+async def init():
+    async with Database() as db:
+        await db.update_config_data("Disclaimer", 1)
+        await db.update_option_data("Language", "zh_CN")
+        print("[start.sh] 数据库初始化完成")
+
+asyncio.run(init())
+PYEOF
+
 echo "[start.sh] 启动 DouK-Downloader（Web API 模式，端口 $PORT）..."
-printf "1\nYES\n" | python3 /app/main.py
+exec python3 /app/main.py
 
 
