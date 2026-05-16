@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: douk-downloader
+    runtime: docker
+    region: singapore
+    plan: free
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_KEY
+        sync: false
+      - key: DOUYIN_COOKIE
+        value: ""
+      - key: PROXY_URL
+        value: ""

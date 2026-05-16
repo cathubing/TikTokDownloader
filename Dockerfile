@@ -43,5 +43,12 @@ EXPOSE 5555
 # 创建挂载点
 VOLUME /app/Volume
 
+# 复制启动脚本
+COPY start.sh /app/start.sh
+RUN chmod +x /app/start.sh
+
+# 安装 supabase 客户端
+RUN pip install --no-cache-dir supabase
+
 # 设置容器启动命令
-CMD ["python", "main.py"]
+CMD ["/app/start.sh"]
