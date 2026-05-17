@@ -104,7 +104,43 @@ async def init():
 asyncio.run(init())
 PYEOF
 
-echo "[start.sh] 启动 DouK-Downloader（Web API 模式，端口 $PORT）..."
-exec python3 /app/main.py
+echo "[start.sh] 启动 DouK-Downloader（Web API 模式）..."
+exec python3 -c "
+import asyncio
+import sys
+sys.path.insert(0, '/app')
+
+from src.config import Parameter, Settings
+from src.custom import PROJECT_ROOT, SERVER_HOST, SERVER_PORT
+from src.manager import Database, DownloadRecorder
+from src.module import Cookie
+from src.record import BaseLogger
+from src.tools import ColorfulConsole
+from src.application.main_server import APIServer
+
+async def main():
+    console = ColorfulConsole()
+    settings = Settings(PROJECT_ROOT, console)
+    cookie = Cookie(settings, console)
+    database = Database()
+
+    async with database:
+        recorder = DownloadRecorder(database, True, console)
+        logger = BaseLogger
+        parameter = Parameter(
+            settings,
+            cookie,
+            logger=logger,
+            console=console,
+            **settings.read(),
+            recorder=recorder,
+        )
+        parameter.set_headers_cookie()
+
+        server = APIServer(parameter, database)
+        await server.run_server(SERVER_HOST, SERVER_PORT)
+
+asyncio.run(main())
+"
 
 
